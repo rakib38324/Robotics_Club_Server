@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { JwtPayload } from 'jsonwebtoken';
-import { TBookes } from './books.interface';
+import { TBooks } from './books.interface';
 import { Book } from './books.model';
 import { User } from '../UsersRegistration/userRegistration.model';
 import AppError from '../../errors/appError';
 import httpStatus from 'http-status';
 
-const createBookIntoDB = async (user: JwtPayload, payload: TBookes) => {
+const createBookIntoDB = async (user: JwtPayload, payload: TBooks) => {
   const { ISBN, Language, bookFormate } = payload;
 
   //=========> check user exist
@@ -55,20 +55,21 @@ const getAllBooksFromDB = async (
 
   const { _id }: any = isExistUser;
   if (isExistUser && _id) {
-    const allData = Book.find({ user: _id });
+    const allData =
+      isExistUser?.role === 'User' ? Book.find({ user: _id }) : Book.find();
 
     // Filtering
     const excludeFields = [
       'Price',
       'Language',
-      'RelaseDate',
+      'ReleaseDate',
       'Author',
       'ISBN',
       'startDate',
       'Genre',
       'Publisher',
       'Series',
-      'Languase',
+      'Language',
       'bookFormate',
       'limit',
       'page',
@@ -113,7 +114,7 @@ const getAllBooksFromDB = async (
 
     const languageQuery = DateFiltering.find({ ...languageFilter });
 
-    //===================================> filter with Auhtor <===============================
+    //===================================> filter with Author <===============================
     const author: any = query.Author;
     let authorFilter: any = {};
     if (author !== undefined) {
@@ -158,7 +159,10 @@ const getAllBooksFromDB = async (
 
     const seriesQuery = GerenQuery.find({ ...seriesFilter });
 
-    const totalData = await Book.find({ user: _id });
+    const totalData =
+      isExistUser?.role === 'User'
+        ? await Book.find({ user: _id })
+        : await Book.find();
     //<============================================> pagination <===========================================>
     let page = 1;
     let limit = 10;
@@ -181,7 +185,7 @@ const getAllBooksFromDB = async (
 
 const updateBookFromDB = async (
   user: JwtPayload,
-  payload: TBookes,
+  payload: TBooks,
   bookId: string,
 ) => {
   //=========> check user exist
@@ -194,7 +198,7 @@ const updateBookFromDB = async (
   const isProductExist = await Book.findById(bookId);
 
   if (!isProductExist) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Books informations is not found');
+    throw new AppError(httpStatus.NOT_FOUND, 'Books information is not found');
   }
 
   const result = await Book.findByIdAndUpdate(isProductExist._id, payload, {
@@ -227,9 +231,9 @@ const deleteSingleBookFromDB = async (user: JwtPayload, _id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!!');
   }
 
-  const isExistnook = await Book.findById({ _id });
+  const isExistBook = await Book.findById({ _id });
 
-  if (!isExistnook) {
+  if (!isExistBook) {
     throw new AppError(httpStatus.NOT_FOUND, 'Book not found!!');
   }
 

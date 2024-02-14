@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import { TLoginUser } from './auth.interface';
 import AppError from '../../errors/appError';
 import { User } from '../UsersRegistration/userRegistration.model';
-import { TjwtPayload, VerifyToken, createToken } from './auth.utillis';
+import { TJwtPayload, VerifyToken, createToken } from './auth.utillis';
 import config from '../../config/config';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -28,9 +28,10 @@ const loginUser = async (payload: TLoginUser) => {
   }
 
   //-====> access granted: send accessToken, RefreshToken
-  const jwtPayload: TjwtPayload = {
+  const jwtPayload: TJwtPayload = {
     email: isUserExists?.email,
     name: isUserExists?.name,
+    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -126,6 +127,7 @@ const refreshToken = async (token: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     name: isUserExists?.name,
+    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -150,6 +152,7 @@ const forgetPassword = async (email: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     name: isUserExists?.name,
+    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -176,7 +179,7 @@ const resetPassword = async (
     throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
   }
 
-  //====> varify token
+  //====> verify token
   const decoded = VerifyToken(token, config.jwt_access_secret as string);
 
   // console.log(decoded)

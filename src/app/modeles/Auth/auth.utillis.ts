@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export type TjwtPayload = { email: string; name: string };
+export type TJwtPayload = { email: string; name: string; role: string };
 
 export const createToken = (
-  jwtPayload: TjwtPayload,
+  jwtPayload: TJwtPayload,
   secret: string,
   expiresIn: string,
 ) => {
@@ -13,6 +13,6 @@ export const createToken = (
 };
 
 export const VerifyToken = (token: string, secret: string) => {
-  //====> varify token
+  //====> verify token
   return jwt.verify(token, secret) as JwtPayload;
 };

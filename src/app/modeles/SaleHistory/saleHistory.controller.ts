@@ -4,7 +4,7 @@ import commonRes from '../../utiles/commonResponse';
 import { SaleHistoryServices } from './saleHistory.service';
 
 const createSaleHistory = catchAsync(async (req, res) => {
-  const result = await SaleHistoryServices.createSaleHistroyIntoDB(
+  const result = await SaleHistoryServices.createSaleHistoryIntoDB(
     req.user,
     req.body,
   );
@@ -17,7 +17,10 @@ const createSaleHistory = catchAsync(async (req, res) => {
 });
 
 const getAllSaleHistory = catchAsync(async (req, res) => {
-  const result = await SaleHistoryServices.getAllSaleHistoryFromDB();
+  const result = await SaleHistoryServices.getAllSaleHistoryFromDB(
+    req.user,
+    req.query,
+  );
 
   commonRes(res, {
     statusCode: httpStatus.OK,

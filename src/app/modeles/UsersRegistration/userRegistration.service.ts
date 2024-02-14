@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { TUser } from './usersRegistration.interface';
+import { TUser } from './userRegistration.interface';
 import AppError from '../../errors/appError';
 import { User } from './userRegistration.model';
 
@@ -10,14 +10,12 @@ const createUserIntoDB = async (payload: TUser) => {
   if (userExists) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'User already exists!, Duplicate email.',
+      'User already exists! Duplicate email.',
     );
   }
 
   const data = {
-    name: payload.name,
-    email: payload.email,
-    password: payload.password,
+    ...payload,
     passwordChangedAt: new Date(),
   };
 

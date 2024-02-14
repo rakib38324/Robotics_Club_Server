@@ -12,7 +12,7 @@ export type TCategory =
   | 'Fantasy'
   | 'Non-fiction';
 
-export type TBookes = {
+export type TBooks = {
   name: string;
   user: Types.ObjectId;
   image: string;

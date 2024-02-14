@@ -5,10 +5,15 @@ import { SaleHistoryControllers } from './saleHistory.controller';
 import { saleHistoryValidations } from './saleHistory.validation';
 const router = express.Router();
 
-router.get('/history', Auth(), SaleHistoryControllers.getAllSaleHistory);
+router.get(
+  '/history',
+  Auth('Manager', 'User'),
+  SaleHistoryControllers.getAllSaleHistory,
+);
+
 router.post(
   '/create-sale-history',
-  Auth(),
+  Auth('Manager', 'User'),
   ValidateRequest(saleHistoryValidations.createSaleHistoryValidationSchema),
   SaleHistoryControllers.createSaleHistory,
 );
