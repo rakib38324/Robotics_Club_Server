@@ -46,8 +46,9 @@ const getAllSaleHistoryFromDB = async (
   const isExistUser = await User.findOne({ email: user?.email });
 
   if ('yearly' in query) {
-    const currentYear = new Date().getFullYear() + 1;
+    const currentYear = new Date().getFullYear();
     const previousTenYear = currentYear - 10;
+
     const result = await SaleHistory.aggregate([
       {
         $match: {
@@ -75,7 +76,19 @@ const getAllSaleHistoryFromDB = async (
       },
     ]);
 
-    return result;
+    // Generate an array of all years in the range
+    const yearsInRange = [];
+    for (let year = previousTenYear; year <= currentYear; year++) {
+      yearsInRange.push(year);
+    }
+
+    // Left join with the sales data to include years with zero sales
+    const finalResult = yearsInRange.map((year) => {
+      const sale = result.find((entry) => entry.year === year);
+      return sale ? sale : { year, totalSales: 0 };
+    });
+
+    return finalResult;
   }
 
   if ('monthly' in query) {
@@ -87,7 +100,7 @@ const getAllSaleHistoryFromDB = async (
         $match: {
           saleDate: {
             $gte: `${currentYear}`,
-            $lte: `${nextYear}`,
+            $lt: `${nextYear}`, // Use $lt instead of $lte to exclude the next year
           },
         },
       },
@@ -109,7 +122,27 @@ const getAllSaleHistoryFromDB = async (
       },
     ]);
 
-    return result;
+    // Generate an array of all months in the year
+    const monthsInRange = [];
+    for (let i = 0; i < 12; i++) {
+      // Adjusted to start from 0
+
+      monthsInRange.push({
+        month: i,
+        monthName: new Date(currentYear, i, 1).toLocaleString('default', {
+          month: 'long',
+        }),
+        totalSales: 0,
+      });
+    }
+
+    // Left join with the sales data to include months with zero sales
+    const finalResult = monthsInRange.map((month) => {
+      const sale = result.find((entry) => entry.month === month.month);
+      return sale ? { ...sale, monthName: month.monthName } : month;
+    });
+
+    return finalResult;
   }
 
   if ('weekly' in query) {
@@ -189,54 +222,28 @@ const getAllSaleHistoryFromDB = async (
     return weeklySalesData;
   }
 
-  // if ('daily' in query) {
-  //   const today = new Date();
-
-  //   const TodyFormattedDate = today.toISOString().split('T')[0];
-
-  //   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-  //   const thirtyDayFormattedDate = thirtyDaysAgo.toISOString().split('T')[0];
-
-  //   const result = await SaleHistory.aggregate([
-  //     {
-  //       $match: {
-  //         saleDate: { $gte: thirtyDayFormattedDate, $lte: TodyFormattedDate },
-  //       },
-  //     },
-  //     {
-  //       $group: {
-  //         _id: '$saleDate',
-  //         totalSales: { $sum: '$quantity' },
-  //       },
-  //     },
-  //     {
-  //       $project: {
-  //         date: '$_id',
-  //         totalSales: 1,
-  //         _id: 0,
-  //       },
-  //     },
-  //     {
-  //       $sort: { date: 1 },
-  //     },
-  //   ]);
-
-  //   return result;
-  // }
-
   if ('daily' in query) {
     const today = new Date();
+
+    const todayFormattedDate = today.toISOString().split('T')[0];
+
     const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgoFormattedDate = thirtyDaysAgo
+      .toISOString()
+      .split('T')[0];
 
     const result = await SaleHistory.aggregate([
       {
         $match: {
-          saleDate: { $gte: thirtyDaysAgo, $lte: today },
+          saleDate: {
+            $gte: thirtyDaysAgoFormattedDate,
+            $lte: todayFormattedDate,
+          },
         },
       },
       {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$saleDate' } },
+          _id: '$saleDate',
           totalSales: { $sum: '$quantity' },
         },
       },
@@ -252,10 +259,21 @@ const getAllSaleHistoryFromDB = async (
       },
     ]);
 
-    return result.map(({ date, totalSales }) => ({
-      date,
-      totalSale: totalSales,
-    }));
+    // Now we'll generate an array of dates within the range
+    const datesInRange = [];
+    const currentDate = new Date(thirtyDaysAgo);
+    while (currentDate <= today) {
+      datesInRange.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Left join with the sales data to include dates with zero sales
+    const finalResult = datesInRange.map((date) => {
+      const sale = result.find((entry) => entry.date === date);
+      return sale ? sale : { date, totalSales: 0 };
+    });
+
+    return finalResult;
   }
 
   const result =
