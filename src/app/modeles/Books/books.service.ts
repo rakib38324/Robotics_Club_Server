@@ -141,6 +141,15 @@ const getAllBooksFromDB = async (
 
     const publisherQuery = isbnQuery.find({ ...publisherFilter });
 
+    //===================================> filter with Book Formate <===============================
+    const bookFormate: any = query.bookFormate;
+    let bookFormateFilter: any = {};
+    if (bookFormate !== undefined) {
+      bookFormateFilter = { bookFormate: bookFormate };
+    }
+
+    const bookFormateQuery = publisherQuery.find({ ...bookFormateFilter });
+
     //===================================> filter with genre <===============================
     const genre: any = query.Genre;
     let genreFilter: any = {};
@@ -148,7 +157,7 @@ const getAllBooksFromDB = async (
       genreFilter = { Geren: genre };
     }
 
-    const GerenQuery = publisherQuery.find({ ...genreFilter });
+    const GerenQuery = bookFormateQuery.find({ ...genreFilter });
 
     //===================================> filter with series <===============================
     const series: any = query.Genre;
@@ -178,7 +187,7 @@ const getAllBooksFromDB = async (
     }
 
     const paginateQuery = seriesQuery.skip(skip);
-    const limitQuery = await paginateQuery.limit(limit);
+    const limitQuery = await paginateQuery.limit(limit).populate('user');
     return { limitQuery, page, limit, totalData };
   }
 };

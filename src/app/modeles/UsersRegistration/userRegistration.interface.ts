@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { Model } from 'mongoose';
-import { USER_ROLE } from './userRegistrstion.constant';
+import { USER_ROLE } from './userRegistration.constant';
 
 export type TUser = {
   name: string;
   email: string;
-  role: 'User' | 'Manager';
+  role: 'User' | 'Manager' | 'Admin';
   password: string;
   passwordChangedAt?: Date;
 };

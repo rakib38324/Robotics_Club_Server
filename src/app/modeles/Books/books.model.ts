@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { TBookes } from './books.interface';
+import { TBooks } from './books.interface';
 
-const Book_Schema = new Schema<TBookes>(
+const Book_Schema = new Schema<TBooks>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -74,4 +74,4 @@ const Book_Schema = new Schema<TBookes>(
   },
 );
 
-export const Book = model<TBookes>('Book', Book_Schema);
+export const Book = model<TBooks>('Book', Book_Schema);
