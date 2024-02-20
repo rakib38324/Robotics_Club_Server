@@ -4,8 +4,8 @@ import AppError from '../../errors/appError';
 import { User } from './userRegistration.model';
 
 const createUserIntoDB = async (payload: TUser) => {
-  const { email } = payload;
-  const userExists = await User.findOne({ email });
+  const { teamLeaderEmail } = payload;
+  const userExists = await User.findOne({ teamLeaderEmail });
 
   if (userExists) {
     throw new AppError(
@@ -24,7 +24,7 @@ const createUserIntoDB = async (payload: TUser) => {
   if (user) {
     const result = await User.aggregate([
       {
-        $match: { email: user?.email },
+        $match: { teamLeaderEmail: user?.teamLeaderEmail },
       },
       {
         $project: {

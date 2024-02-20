@@ -16,7 +16,7 @@ const loginUser = catchAsync(async (req, res) => {
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Login Successgully!',
+    message: 'Login Successfully!',
     data: { user, token },
   });
 });
@@ -28,7 +28,7 @@ const changePassword = catchAsync(async (req, res) => {
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Password chnaged Successfully',
+    message: 'Password Change Successfully',
     data: result,
   });
 });
@@ -53,7 +53,7 @@ const forgetPassword = catchAsync(async (req, res) => {
   commonRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Reset link is genarated Successfully',
+    message: 'Reset link is Generate Successfully',
     data: result,
   });
 });

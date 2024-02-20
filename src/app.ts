@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use('/api/v1', router);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Book Management Server is running successfully.');
+  res.send('Robotic Club Server is running successfully.');
 });
 
 //========> handle the router not found

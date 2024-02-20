@@ -2,16 +2,29 @@
 import { Model } from 'mongoose';
 import { USER_ROLE } from './userRegistration.constant';
 
+
 export type TUser = {
-  name: string;
-  email: string;
-  role: 'User' | 'Manager' | 'Admin';
-  password: string;
-  passwordChangedAt?: Date;
+  segment: 'Project Showcase' | 'LFR' | 'Soccer Boot';
+  teamName: string;
+  projectName?: string;
+  projectDescription?: string; 
+  teamLeaderName: string;
+  teamLeaderEmail: string;
+  teamLeaderPhoneNumber: string;
+  teamLeaderFacebookID?: string; 
+  teamMembers_1_name: string;
+  teamMembers_1_email: string;
+  teamMembers_1_phoneNumber: string;
+  teamMembers_2_name: string;
+  teamMembers_2_email: string;
+  teamMembers_2_phoneNumber: string;
+  transactionID: string;
+  sandMoneyNumber: string;
+  password: string
 };
 
 export interface UserModel extends Model<TUser> {
-  isUserExistsByEmail(email: string): Promise<TUser | null>;
+  isUserExistsByEmail(teamLeaderEmail: string): Promise<TUser | null>;
   isPasswordMatched(
     plainTextPassword: string,
     hasPassword: string,

@@ -4,28 +4,24 @@ import { TUser, UserModel } from './userRegistration.interface';
 import config from '../../config/config';
 import bcrypt from 'bcrypt';
 
-const userSchema = new Schema<TUser>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    passwordChangedAt: {
-      type: Date,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ['User', 'Manager', 'Admin'],
-    },
+const userSchema = new Schema<TUser>({
+    segment: { type: String, required: true, enum: ['Project Showcase', 'LFR' , 'Soccer Boot'], },
+    teamName: { type: String, required: true },
+    projectName: { type: String },
+    projectDescription: { type: String },
+    teamLeaderName: { type: String, required: true },
+    teamLeaderEmail: { type: String, required: true , unique: true,},
+    teamLeaderPhoneNumber: { type: String, required: true },
+    teamLeaderFacebookID: { type: String },
+    teamMembers_1_name: { type: String, required: true },
+    teamMembers_1_email: { type: String, required: true },
+    teamMembers_1_phoneNumber: { type: String, required: true },
+    teamMembers_2_name: { type: String, required: true },
+    teamMembers_2_email: { type: String, required: true },
+    teamMembers_2_phoneNumber: { type: String, required: true },
+    transactionID: { type: String, required: true },
+    sandMoneyNumber: { type: String, required: true },
+    password: { type: String, required: true },
   },
   {
     timestamps: true,
@@ -46,8 +42,8 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  return await User.findOne({ email });
+userSchema.statics.isUserExistsByEmail = async function (teamLeaderEmail: string) {
+  return await User.findOne({ teamLeaderEmail });
 };
 
 userSchema.statics.isPasswordMatched = async function (

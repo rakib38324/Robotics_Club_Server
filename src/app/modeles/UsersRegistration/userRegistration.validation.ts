@@ -3,11 +3,30 @@ import { z } from 'zod';
 
 const passwordMinLength = 8;
 
+const TeamMemberSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  phoneNumber: z.string().min(10), // assuming phone number should have at least 10 characters
+});
+
 const createUserValidationSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Username is required.' }).min(1).max(100),
-    email: z.string({ required_error: 'Email is required.' }).email(),
-    role: z.enum(['User', 'Manager', 'Admin']),
+    teamName: z.string({ required_error: 'Team Name is required.' }).min(1),
+    segment: z.enum(['Project Showcase', 'LFR', 'Soccer Boot']),
+    projectName: z.string({ required_error: 'Project Name is required.' }).optional(),
+    projectDescription: z.string().max(200).optional(),
+    teamLeaderName: z.string().min(1),
+    teamLeaderEmail: z.string().email(),
+    teamLeaderPhoneNumber: z.string().min(10), // assuming phone number should have at least 10 characters
+    teamLeaderFacebookID: z.string().optional(),
+    teamMembers_1_name: z.string().min(1),
+    teamMembers_1_email: z.string().min(1),
+    teamMembers_1_password: z.string().min(1),
+    teamMembers_2_name: z.string().min(1),
+    teamMembers_2_email: z.string().min(1),
+    teamMembers_2_password: z.string().min(1),
+    transactionID: z.string().min(1),
+    sandMoneyNumber: z.string().min(1),
     password: z
       .string({ required_error: 'Password is required.' })
       .refine((data) => data.length >= passwordMinLength, {
@@ -30,11 +49,20 @@ const createUserValidationSchema = z.object({
 
 const updateUserValidationSchema = z.object({
   body: z.object({
-    name: z.string().min(1).max(255).optional(),
-    email: z.string().email().optional(),
-    role: z.enum(['User', 'Manager', 'Admin']).optional(),
+    segment: z.enum(['Project Showcase', 'LFR', 'Soccer Boot']).optional(),
+    teamName: z.string().min(1).optional(),
+    projectName: z.string().optional(),
+    projectDescription: z.string().max(200).optional(),
+    teamLeaderName: z.string().min(1).optional(),
+    teamLeaderEmail: z.string().email().optional(),
+    teamLeaderPhoneNumber: z.string().min(10).optional(), // assuming phone number should have at least 10 characters
+    teamLeaderFacebookID: z.string().optional(),
+    teamMembers_1: TeamMemberSchema.optional(),
+    teamMembers_2: TeamMemberSchema.optional(),
+    transactionID: z.string().min(1).optional(),
+    sandMoneyNumber: z.string().min(1).optional(),
     password: z
-      .string()
+      .string({ required_error: 'Password is required.' })
       .refine((data) => data.length >= passwordMinLength, {
         message: `Password must be at least ${passwordMinLength} characters long.`,
       })
@@ -49,7 +77,8 @@ const updateUserValidationSchema = z.object({
       })
       .refine((data) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(data), {
         message: 'Password must contain at least one special character.',
-      }),
+      })
+      .optional(),
   }),
 });
 
