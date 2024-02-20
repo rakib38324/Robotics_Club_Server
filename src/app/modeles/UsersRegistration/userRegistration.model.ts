@@ -4,13 +4,19 @@ import { TUser, UserModel } from './userRegistration.interface';
 import config from '../../config/config';
 import bcrypt from 'bcrypt';
 
-const userSchema = new Schema<TUser>({
-    segment: { type: String, required: true, enum: ['Project Showcase', 'LFR' , 'Soccer Boot'], },
+const userSchema = new Schema<TUser>(
+  {
+    role: { type: String, required: true, enum: ['User', 'Admin'] },
+    segment: {
+      type: String,
+      required: true,
+      enum: ['Project Showcase', 'LFR', 'Soccer Boot'],
+    },
     teamName: { type: String, required: true },
     projectName: { type: String },
     projectDescription: { type: String },
     teamLeaderName: { type: String, required: true },
-    teamLeaderEmail: { type: String, required: true , unique: true,},
+    teamLeaderEmail: { type: String, required: true, unique: true },
     teamLeaderPhoneNumber: { type: String, required: true },
     teamLeaderFacebookID: { type: String },
     teamMembers_1_name: { type: String, required: true },
@@ -42,7 +48,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.statics.isUserExistsByEmail = async function (teamLeaderEmail: string) {
+userSchema.statics.isUserExistsByEmail = async function (
+  teamLeaderEmail: string,
+) {
   return await User.findOne({ teamLeaderEmail });
 };
 

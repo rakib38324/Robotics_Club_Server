@@ -46,9 +46,10 @@ const refreshToken = catchAsync(async (req, res) => {
 });
 
 const forgetPassword = catchAsync(async (req, res) => {
-  const email = req.body.email;
+  const teamLeaderEmail = req.body.teamLeaderEmail;
+  console.log(teamLeaderEmail);
 
-  const result = await AuthServices.forgetPassword(email);
+  const result = await AuthServices.forgetPassword(teamLeaderEmail);
 
   commonRes(res, {
     statusCode: httpStatus.OK,

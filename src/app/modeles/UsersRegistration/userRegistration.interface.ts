@@ -2,16 +2,16 @@
 import { Model } from 'mongoose';
 import { USER_ROLE } from './userRegistration.constant';
 
-
 export type TUser = {
+  role: 'User' | 'Admin';
   segment: 'Project Showcase' | 'LFR' | 'Soccer Boot';
   teamName: string;
   projectName?: string;
-  projectDescription?: string; 
+  projectDescription?: string;
   teamLeaderName: string;
   teamLeaderEmail: string;
   teamLeaderPhoneNumber: string;
-  teamLeaderFacebookID?: string; 
+  teamLeaderFacebookID?: string;
   teamMembers_1_name: string;
   teamMembers_1_email: string;
   teamMembers_1_phoneNumber: string;
@@ -20,7 +20,8 @@ export type TUser = {
   teamMembers_2_phoneNumber: string;
   transactionID: string;
   sandMoneyNumber: string;
-  password: string
+  password: string;
+  passwordChangedAt?: Date;
 };
 
 export interface UserModel extends Model<TUser> {

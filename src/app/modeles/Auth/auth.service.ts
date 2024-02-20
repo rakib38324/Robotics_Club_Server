@@ -11,7 +11,7 @@ import { sendEmail } from '../../utiles/sendEmail';
 const loginUser = async (payload: TLoginUser) => {
   //===>check if the user is exists
 
-  const isUserExists = await User.isUserExistsByEmail(payload.email);
+  const isUserExists = await User.isUserExistsByEmail(payload.teamLeaderEmail);
 
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
@@ -29,8 +29,8 @@ const loginUser = async (payload: TLoginUser) => {
 
   //-====> access granted: send accessToken, RefreshToken
   const jwtPayload: TJwtPayload = {
-    email: isUserExists?.email,
-    name: isUserExists?.name,
+    email: isUserExists?.teamLeaderEmail,
+    name: isUserExists?.teamLeaderName,
     role: isUserExists?.role,
   };
 
@@ -82,7 +82,7 @@ const changePassword = async (
 
   await User.findOneAndUpdate(
     {
-      email: userData.email,
+      teamLeaderEmail: userData.email,
     },
     {
       password: newHasedPassword,
@@ -125,8 +125,8 @@ const refreshToken = async (token: string) => {
 
   //-====> access granted: send accessToken, RefreshToken
   const jwtPayload = {
-    email: isUserExists?.email,
-    name: isUserExists?.name,
+    email: isUserExists?.teamLeaderEmail,
+    name: isUserExists?.teamLeaderName,
     role: isUserExists?.role,
   };
 
@@ -150,8 +150,8 @@ const forgetPassword = async (email: string) => {
   }
 
   const jwtPayload = {
-    email: isUserExists?.email,
-    name: isUserExists?.name,
+    email: isUserExists?.teamLeaderEmail,
+    name: isUserExists?.teamLeaderName,
     role: isUserExists?.role,
   };
 
@@ -162,11 +162,11 @@ const forgetPassword = async (email: string) => {
     '10m',
   );
 
-  const resetUILink = `${config.reset_password_ui_link}?email=${isUserExists.email}&token=${resetToken}`;
+  const resetUILink = `${config.reset_password_ui_link}?email=${isUserExists.teamLeaderEmail}&token=${resetToken}`;
 
-  sendEmail(isUserExists.email, resetUILink);
+  sendEmail(isUserExists.teamLeaderEmail, resetUILink);
 
-  return `Reset link sent your email: ${isUserExists.email}`;
+  return `Reset link sent your email: ${isUserExists.teamLeaderEmail}`;
 };
 
 const resetPassword = async (

@@ -4,7 +4,6 @@ import commonRes from '../../utiles/commonResponse';
 import { UserServices } from './userRegistration.service';
 
 const createUsers = catchAsync(async (req, res) => {
-  console.log(req.body);
   const result = await UserServices.createUserIntoDB(req.body);
   commonRes(res, {
     statusCode: httpStatus.OK,

@@ -3,7 +3,9 @@ import { z } from 'zod';
 
 const loginValidationSchema = z.object({
   body: z.object({
-    email: z.string({ required_error: 'Email is required.' }),
+    teamLeaderEmail: z.string({
+      required_error: 'Team Leader Email is required.',
+    }),
     password: z.string({ required_error: 'Password is required.' }),
   }),
 });
@@ -37,19 +39,23 @@ const changePasswordValidationSchema = z.object({
 
 const refreshTokenValidationSchema = z.object({
   cookies: z.object({
-    refreshToken: z.string({ required_error: 'Refresh token is requird.' }),
+    refreshToken: z.string({ required_error: 'Refresh token is required.' }),
   }),
 });
 
-const forgetPasswprdValidationSchema = z.object({
+const forgetPasswordValidationSchema = z.object({
   body: z.object({
-    email: z.string({ required_error: 'Email is requird.' }),
+    teamLeaderEmail: z.string({
+      required_error: 'Team Leader Email is required.',
+    }),
   }),
 });
 
-const resetPasswprdValidationSchema = z.object({
+const resetPasswordValidationSchema = z.object({
   body: z.object({
-    email: z.string({ required_error: 'Email is requird.' }),
+    teamLeaderEmail: z.string({
+      required_error: 'Team Leader Email is required.',
+    }),
     newPassword: z
       .string()
       .refine((data) => data.length >= passwordMinLength, {
@@ -74,6 +80,6 @@ export const authValidations = {
   loginValidationSchema,
   changePasswordValidationSchema,
   refreshTokenValidationSchema,
-  forgetPasswprdValidationSchema,
-  resetPasswprdValidationSchema,
+  forgetPasswordValidationSchema,
+  resetPasswordValidationSchema,
 };

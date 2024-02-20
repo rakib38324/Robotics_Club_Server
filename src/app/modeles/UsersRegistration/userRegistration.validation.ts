@@ -13,18 +13,41 @@ const createUserValidationSchema = z.object({
   body: z.object({
     teamName: z.string({ required_error: 'Team Name is required.' }).min(1),
     segment: z.enum(['Project Showcase', 'LFR', 'Soccer Boot']),
-    projectName: z.string({ required_error: 'Project Name is required.' }).optional(),
+    role: z.enum(['User', 'Admin']),
+    projectName: z
+      .string({ required_error: 'Project Name is required.' })
+      .optional(),
     projectDescription: z.string().max(200).optional(),
-    teamLeaderName: z.string().min(1),
-    teamLeaderEmail: z.string().email(),
-    teamLeaderPhoneNumber: z.string().min(10), // assuming phone number should have at least 10 characters
-    teamLeaderFacebookID: z.string().optional(),
-    teamMembers_1_name: z.string().min(1),
-    teamMembers_1_email: z.string().min(1),
-    teamMembers_1_password: z.string().min(1),
-    teamMembers_2_name: z.string().min(1),
-    teamMembers_2_email: z.string().min(1),
-    teamMembers_2_password: z.string().min(1),
+    teamLeaderName: z
+      .string({ required_error: 'Team Leader Name is required.' })
+      .min(1),
+    teamLeaderEmail: z
+      .string({ required_error: 'Team Leader Email is required.' })
+      .email(),
+    teamLeaderPhoneNumber: z
+      .string({ required_error: 'Team Leader Phone number is required.' })
+      .min(10), // assuming phone number should have at least 10 characters
+    teamLeaderFacebookID: z.string({
+      required_error: 'Team Facebook Id is required.',
+    }),
+    teamMembers_1_name: z
+      .string({ required_error: 'Team member_1 Name is required.' })
+      .min(1),
+    teamMembers_1_email: z
+      .string({ required_error: 'Team member_1 Email is required.' })
+      .min(1),
+    teamMembers_1_phoneNumber: z
+      .string({ required_error: 'Team member_1 Phone Number is required.' })
+      .min(1),
+    teamMembers_2_name: z
+      .string({ required_error: 'Team member_2 Name is required.' })
+      .min(1),
+    teamMembers_2_email: z
+      .string({ required_error: 'Team member_2 Email is required.' })
+      .min(1),
+    teamMembers_2_phoneNumber: z
+      .string({ required_error: 'Team member_ Phone Number is required.' })
+      .min(1),
     transactionID: z.string().min(1),
     sandMoneyNumber: z.string().min(1),
     password: z
