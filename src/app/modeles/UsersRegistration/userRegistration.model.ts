@@ -10,7 +10,7 @@ const userSchema = new Schema<TUser>(
     segment: {
       type: String,
       required: true,
-      enum: ['Project Showcase', 'LFR', 'Soccer Boot'],
+      enum: ['Project Showcase', 'LFR', 'Soccer Boot', 'Robotic Club Admin'],
     },
     teamName: { type: String, required: true },
     projectName: { type: String },

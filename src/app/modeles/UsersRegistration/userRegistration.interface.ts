@@ -4,7 +4,7 @@ import { USER_ROLE } from './userRegistration.constant';
 
 export type TUser = {
   role: 'User' | 'Admin';
-  segment: 'Project Showcase' | 'LFR' | 'Soccer Boot';
+  segment: 'Project Showcase' | 'LFR' | 'Soccer Boot' | 'Robotic Club Admin';
   teamName: string;
   projectName?: string;
   projectDescription?: string;

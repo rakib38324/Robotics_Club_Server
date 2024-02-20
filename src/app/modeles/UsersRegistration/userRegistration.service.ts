@@ -38,6 +38,68 @@ const createUserIntoDB = async (payload: TUser) => {
   }
 };
 
+const getAllUsersFromDB = async () => {
+  const result = await User.find();
+  return result;
+};
+
+const getSingleUserFromDB = async (email: string) => {
+  const studentExist = await User.isUserExistsByEmail(email);
+
+  if (studentExist) {
+    const result = await User.findOne({ teamLeaderEmail: email });
+
+    return result;
+  } else {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+};
+
+const deleteUserFromDB = async (email: string) => {
+  const studentExist = await User.isUserExistsByEmail(email);
+  if (studentExist) {
+    const deletedUser = await User.findOneAndDelete({
+      teamLeaderEmail: email,
+    });
+
+    if (!deletedUser) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user!');
+    }
+
+    return deletedUser;
+  } else {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not Exists!');
+  }
+};
+
+const updateUserFromDB = async (email: string, payload: Partial<TUser>) => {
+  if (payload.password) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Password is not Update-able field.',
+    );
+  }
+
+  if (await User.isUserExistsByEmail(email)) {
+    const result = await User.findOneAndUpdate(
+      { teamLeaderEmail: email },
+      payload,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    return result;
+  } else {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not Exists!');
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
+  getAllUsersFromDB,
+  getSingleUserFromDB,
+  deleteUserFromDB,
+  updateUserFromDB,
 };

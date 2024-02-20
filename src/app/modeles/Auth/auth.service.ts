@@ -170,10 +170,10 @@ const forgetPassword = async (email: string) => {
 };
 
 const resetPassword = async (
-  payload: { email: string; newPassword: string },
+  payload: { teamLeaderEmail: string; newPassword: string },
   token: string,
 ) => {
-  const isUserExists = await User.isUserExistsByEmail(payload.email);
+  const isUserExists = await User.isUserExistsByEmail(payload.teamLeaderEmail);
 
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
@@ -183,7 +183,7 @@ const resetPassword = async (
   const decoded = VerifyToken(token, config.jwt_access_secret as string);
 
   // console.log(decoded)
-  if (decoded.email !== payload.email) {
+  if (decoded.email !== payload.teamLeaderEmail) {
     throw new AppError(httpStatus.FORBIDDEN, `You are forbidden!!`);
   }
 
@@ -195,7 +195,7 @@ const resetPassword = async (
 
   await User.findOneAndUpdate(
     {
-      email: decoded.email,
+      teamLeaderEmail: decoded.email,
     },
     {
       password: newHasedPassword,
