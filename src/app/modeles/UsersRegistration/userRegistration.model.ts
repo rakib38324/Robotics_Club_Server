@@ -10,9 +10,10 @@ const userSchema = new Schema<TUser>(
     segment: {
       type: String,
       required: true,
-      enum: ['Project Showcase', 'LFR', 'Soccer Boot', 'Robotic Club Admin'],
+      enum: ['Project Showcase', 'LFR', 'Soccer Boot', 'Robotic Club Admin', 'Truss Challenge'],
     },
     teamName: { type: String, required: true },
+    picture: { type: String },
     projectName: { type: String },
     projectDescription: { type: String },
     teamLeaderName: { type: String, required: true },

@@ -6,7 +6,7 @@ import ValidateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
-router.get('/', Auth('Admin', 'User'), userControllers.getAllUsers);
+router.get('/', Auth('Admin'), userControllers.getAllUsers);
 
 router.get('/:email', Auth('Admin', 'User'), userControllers.getSingleUser);
 

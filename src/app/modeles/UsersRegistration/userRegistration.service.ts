@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import { TUser } from './userRegistration.interface';
 import AppError from '../../errors/appError';
 import { User } from './userRegistration.model';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createUserIntoDB = async (payload: TUser) => {
   const { teamLeaderEmail } = payload;
@@ -72,7 +73,19 @@ const deleteUserFromDB = async (email: string) => {
   }
 };
 
-const updateUserFromDB = async (email: string, payload: Partial<TUser>) => {
+const updateUserFromDB = async (
+  email: string,
+  payload: Partial<TUser>,
+  user: JwtPayload,
+) => {
+  if (payload.role) {
+    if (user?.role === 'User') {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'User Role Change only Admin.',
+      );
+    }
+  }
   if (payload.password) {
     throw new AppError(
       httpStatus.BAD_REQUEST,

@@ -55,7 +55,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 const updateUser = catchAsync(async (req, res) => {
   const { email } = req.params;
-  const result = await UserServices.updateUserFromDB(email, req.body);
+  const result = await UserServices.updateUserFromDB(email, req.body, req.user);
 
   //--> sent response
   commonRes(res, {

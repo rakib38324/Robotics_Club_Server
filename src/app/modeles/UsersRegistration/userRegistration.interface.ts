@@ -4,7 +4,7 @@ import { USER_ROLE } from './userRegistration.constant';
 
 export type TUser = {
   role: 'User' | 'Admin';
-  segment: 'Project Showcase' | 'LFR' | 'Soccer Boot' | 'Robotic Club Admin';
+  segment: 'Project Showcase' | 'LFR' | 'Soccer Boot' | 'Truss Challenge' | 'Robotic Club Admin';
   teamName: string;
   projectName?: string;
   projectDescription?: string;
@@ -20,6 +20,7 @@ export type TUser = {
   teamMembers_2_phoneNumber: string;
   transactionID: string;
   sandMoneyNumber: string;
+  picture: string;
   password: string;
   passwordChangedAt?: Date;
 };
