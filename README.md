@@ -1,4 +1,4 @@
-# Welcome to Robotics Club Server
+## Welcome to Robotics Club Server
 ## Live site: 
 ```
 https://robotic-club.vercel.app/
